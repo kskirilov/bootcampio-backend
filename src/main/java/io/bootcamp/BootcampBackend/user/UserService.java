@@ -6,7 +6,15 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserDAO userDAO;
 
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(UserDataAccessService userDataAccessService) {
+        this.userDAO = userDataAccessService;
+    }
+
+    public void addNewUser(User user){
+        // TODO: check if user exists
+        int result = userDAO.insertUser(user);
+        if (result != 1) {
+            throw new IllegalStateException("oops something went wrong");
+        }
     }
 }
