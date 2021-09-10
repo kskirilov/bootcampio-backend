@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface UserDAO {
     Optional<User> selectUserById(int id);
     List<User> selectAllUser();
-    int deletePerson(int id);
+    int deleteUser(int id);
     int insertUser (User user);
-
+    int updateUser(User user);
 }
