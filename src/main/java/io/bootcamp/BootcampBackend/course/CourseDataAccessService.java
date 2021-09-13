@@ -1,6 +1,9 @@
 package io.bootcamp.BootcampBackend.course;
 
+import io.bootcamp.BootcampBackend.user.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +27,38 @@ public class CourseDataAccessService implements CourseDAO {
 
     @Override
     public List<Course> selectAllCourses() {
-        return null;
+
+        String selectAllCourses = """
+                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through  FROM courses 
+                
+                INNER JOIN categories
+                ON courses.category_id = categories.id
+                INNER JOIN subcategories
+                ON courses.subcategory_id = subcategories.id
+                """;
+
+        List<Course> result = jdbcTemplate.query(selectAllCourses, getCourseRowMapper());
+
+        return result;
+
+    }
+
+    private RowMapper<Course> getCourseRowMapper() {
+        return (resultSet, i) -> {
+            return new Course(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getDouble("rating"),
+                    resultSet.getString("description"),
+                    Category.valueOf(resultSet.getString("name")),
+                    resultSet.getString("name"),
+                    resultSet.getDate("deadline").toLocalDate(),
+                    resultSet.getInt("cost"),
+                    Location.valueOf(resultSet.getString("location")),
+                    resultSet.getString("place"),
+                    resultSet.getInt("spaces_available"),
+                    resultSet.getString("sign_up_through"));
+        };
     }
 
     @Override

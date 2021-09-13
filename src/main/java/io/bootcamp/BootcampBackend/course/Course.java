@@ -1,5 +1,6 @@
 package io.bootcamp.BootcampBackend.course;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -31,6 +32,7 @@ public class Course {
         this.spacesAvailable = spacesAvailable;
         this.signUpThrough = signUpThrough;
     }
+
 
     public int getId() {
         return id;

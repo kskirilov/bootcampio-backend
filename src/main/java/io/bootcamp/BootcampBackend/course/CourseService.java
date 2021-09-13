@@ -2,6 +2,8 @@ package io.bootcamp.BootcampBackend.course;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseService {
     private final CourseDAO courseDAO;
@@ -16,5 +18,9 @@ public class CourseService {
         if (result != 1) {
             throw new IllegalStateException("oops something went wrong");
         }
+    }
+
+    public List<Course> selectAllCourses() {
+        return courseDAO.selectAllCourses();
     }
 }
