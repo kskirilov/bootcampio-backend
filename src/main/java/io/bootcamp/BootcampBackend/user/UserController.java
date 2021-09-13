@@ -1,5 +1,7 @@
 package io.bootcamp.BootcampBackend.user;
 
+import io.bootcamp.BootcampBackend.exception.EmailExistsException;
+import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class UserController {
 
 
     @PostMapping
-    public void addUser(@RequestBody User user){
+    public void addUser(@RequestBody User user) throws EmailExistsException {
         userService.addNewUser(user);
     }
 
@@ -37,6 +39,22 @@ public class UserController {
     @PutMapping
     public void updateUser(@RequestBody User user){
         userService.updateUser(user);
+    }
+
+
+    @PostMapping("/login")
+    public void loginUser(@RequestBody User user) throws IncorrectCredentialException {
+        userService.loginUser(user);
+    }
+
+    @DeleteMapping("/login/{id}")
+    public void logoutUser(@PathVariable("id") int id){
+        userService.logoutUser(id);
+    }
+
+    @GetMapping("/login")
+    public List<User> selectAllOnlineUser(){
+        return userService.selectAllOnlineUser();
     }
 
 }

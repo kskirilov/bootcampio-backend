@@ -13,6 +13,11 @@ public class UserListDataAccessService implements UserDAO{
     }
 
     @Override
+    public Optional<User> selectUserByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<User> selectAllUser() {
         return null;
     }
@@ -30,5 +35,20 @@ public class UserListDataAccessService implements UserDAO{
     @Override
     public int updateUser(User user) {
         return 0;
+    }
+
+    @Override
+    public int loginUser(int id) {
+        return 0;
+    }
+
+    @Override
+    public int logoutUser(int id) {
+        return 0;
+    }
+
+    @Override
+    public List<User> selectAllOnlineUser() {
+        return null;
     }
 }

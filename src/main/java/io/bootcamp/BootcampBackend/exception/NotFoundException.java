@@ -1,4 +1,4 @@
-package io.bootcamp.BootcampBackend.execption;
+package io.bootcamp.BootcampBackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
