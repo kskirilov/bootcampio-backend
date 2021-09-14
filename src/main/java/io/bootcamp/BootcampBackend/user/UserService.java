@@ -3,8 +3,6 @@ package io.bootcamp.BootcampBackend.user;
 import io.bootcamp.BootcampBackend.exception.EmailExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
 import io.bootcamp.BootcampBackend.exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,7 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void addNewUser(User user) throws EmailExistsException {
+    public int addNewUser(User user) throws EmailExistsException {
         List<User> users = selectAllUser();
 
         if (users.contains(user)) {
@@ -33,6 +31,7 @@ public class UserService {
         if (result != 1) {
             throw new IllegalStateException("oops something went wrong with the database");
         }
+        return result;
     }
 
     public void removeExistingUser(int id) {
