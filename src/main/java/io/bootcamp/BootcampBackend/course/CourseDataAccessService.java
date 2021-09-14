@@ -29,7 +29,11 @@ public class CourseDataAccessService implements CourseDAO {
     public List<Course> selectAllCourses() {
 
         String selectAllCourses = """
-                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through  FROM courses 
+               SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through,
+                categories.name AS category_name,
+                subcategories.name AS subcategory_name
+                
+                FROM courses
                 
                 INNER JOIN categories
                 ON courses.category_id = categories.id
@@ -50,8 +54,8 @@ public class CourseDataAccessService implements CourseDAO {
                     resultSet.getString("name"),
                     resultSet.getDouble("rating"),
                     resultSet.getString("description"),
-                    Category.valueOf(resultSet.getString("name")),
-                    resultSet.getString("name"),
+                    Category.valueOf(resultSet.getString("category_name")),
+                    resultSet.getString("subcategory_name"),
                     resultSet.getDate("deadline").toLocalDate(),
                     resultSet.getInt("cost"),
                     Location.valueOf(resultSet.getString("location")),
@@ -61,9 +65,21 @@ public class CourseDataAccessService implements CourseDAO {
         };
     }
 
+
     @Override
     public int deleteCourse(int id) {
         return 0;
+    }
+
+    @Override
+    public int updateCourse(Course course) { //TODO
+        String sql = """
+        UPDATE courses SET name = ?, email = ?, password = ? WHERE id = ? 
+        """;
+
+        int result = jdbcTemplate.update(sql, courses.getName(), user.getEmail(), user.getPassword(), user.getId());
+
+        return result;
     }
 
     @Override
