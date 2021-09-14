@@ -74,10 +74,15 @@ public class CourseDataAccessService implements CourseDAO {
     @Override
     public int updateCourse(Course course) { //TODO
         String sql = """
-        UPDATE courses SET name = ?, email = ?, password = ? WHERE id = ? 
-        """;
+        UPDATE courses SET name = ?, rating = ?, description = ?,category = ?,
+                            subcategory = ?,deadline = ?, cost = ?,location = ?, 
+                            place = ?, spaces_available = ?,sign_up_through = ? WHERE id = ? 
+         """;
 
-        int result = jdbcTemplate.update(sql, courses.getName(), user.getEmail(), user.getPassword(), user.getId());
+        int result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
+                course.getCategory(),course.getSubcategory(), course.getDeadline(),
+                course.getCost(),course.getLocation(),course.getPlace(),
+                course.getSpacesAvailable(),course.getSignUpThrough());
 
         return result;
     }
