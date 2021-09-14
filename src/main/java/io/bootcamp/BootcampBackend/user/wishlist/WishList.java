@@ -1,4 +1,4 @@
-package io.bootcamp.BootcampBackend.user;
+package io.bootcamp.BootcampBackend.user.wishlist;
 
 import io.bootcamp.BootcampBackend.course.Course;
 

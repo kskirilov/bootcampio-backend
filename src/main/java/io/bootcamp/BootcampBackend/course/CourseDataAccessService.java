@@ -29,7 +29,11 @@ public class CourseDataAccessService implements CourseDAO {
     public List<Course> selectAllCourses() {
 
         String selectAllCourses = """
-                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through  FROM courses 
+                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through,
+                categories.name AS category_name,
+                subcategories.name AS subcategory_name
+                
+                FROM courses 
                 
                 INNER JOIN categories
                 ON courses.category_id = categories.id
@@ -41,24 +45,6 @@ public class CourseDataAccessService implements CourseDAO {
 
         return result;
 
-    }
-
-    private RowMapper<Course> getCourseRowMapper() {
-        return (resultSet, i) -> {
-            return new Course(
-                    resultSet.getInt("id"),
-                    resultSet.getString("name"),
-                    resultSet.getDouble("rating"),
-                    resultSet.getString("description"),
-                    Category.valueOf(resultSet.getString("name")),
-                    resultSet.getString("name"),
-                    resultSet.getDate("deadline").toLocalDate(),
-                    resultSet.getInt("cost"),
-                    Location.valueOf(resultSet.getString("location")),
-                    resultSet.getString("place"),
-                    resultSet.getInt("spaces_available"),
-                    resultSet.getString("sign_up_through"));
-        };
     }
 
     @Override
@@ -75,17 +61,33 @@ public class CourseDataAccessService implements CourseDAO {
         
         String insertCourseSql = """
                 INSERT INTO courses(name, rating, description, category_id, subcategory_id, deadline, cost, location, place, spaces_available, sign_up_through) 
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES(?, ?, ?, ?, ?, ?, ?, CAST(? AS location_type), ?, ?, ?)
                 """;
-
-        String location = String.valueOf(course.getLocation());
 
         List<Map<String, Object>> subcategoryResult = jdbcTemplate.queryForList(subcategoryIdSql, course.getSubcategory());
 
-        int result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), subcategoryResult.get(0).get("category_id"), subcategoryResult.get(0).get("id"), course.getDeadline(), course.getCost(), location, course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+        int result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), subcategoryResult.get(0).get("category_id"), subcategoryResult.get(0).get("id"), course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
 
         return result;
     }
 
+
+    private RowMapper<Course> getCourseRowMapper() {
+        return (resultSet, i) -> {
+            return new Course(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getDouble("rating"),
+                    resultSet.getString("description"),
+                    Category.valueOf(resultSet.getString("category_name")),
+                    resultSet.getString("subcategory_name"),
+                    resultSet.getDate("deadline").toLocalDate(),
+                    resultSet.getInt("cost"),
+                    Location.valueOf(resultSet.getString("location")),
+                    resultSet.getString("place"),
+                    resultSet.getInt("spaces_available"),
+                    resultSet.getString("sign_up_through"));
+        };
+    }
 
 }

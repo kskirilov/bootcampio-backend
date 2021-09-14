@@ -1,6 +1,6 @@
 package io.bootcamp.BootcampBackend.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.bootcamp.BootcampBackend.user.wishlist.WishList;
 
 import java.util.Objects;
 
