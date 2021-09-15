@@ -11,6 +11,18 @@ import java.util.List;
 
 @Repository
 public class WishlistDataAccessService implements WishListDAO{
+    // Makes the calls to the databases (CALLED FROM WishListService)
+
+
+
+    //wishlist is a table which stores the user_id and course_id whenever a user adds a course to their wishlist
+    //it has a select, insert and delete function
+    //       WISHLIST TABLE
+    //id | course_id | user_id
+    //1  |      2    |    4
+    //2  |      1    |    3
+
+
     JdbcTemplate jdbcTemplate;
 
     public WishlistDataAccessService(JdbcTemplate jdbcTemplate){

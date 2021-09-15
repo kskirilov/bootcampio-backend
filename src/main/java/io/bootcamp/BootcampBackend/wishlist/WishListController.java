@@ -8,6 +8,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/wishlist")
 public class WishListController{
+    // CALLS BUSINESS LOGIC
+
     private WishListService wishListService;
 
     public WishListController(WishListService wishListService){

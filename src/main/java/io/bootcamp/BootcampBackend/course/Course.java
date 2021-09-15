@@ -4,6 +4,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Course {
+    //                                                             Courses table
+    // id |                  name                    | rating   |   description      |  category             | subcategory |  deadline    |  cost  |  location | place | spacesAvailable |  signUpThrough
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // 1  | Bright Network Technology Academy (BNTA) |   4.9    |   course is cool   |  SOFTWARE_ENGINEERING | FULL_STACK  |  15/09/2021  |  0.00  |  Online   | Zoom  |       40        |  https://www.brightnetwork.co.uk/graduate-employer-company/bright-network-technology-academy/
+
     private int id;
     private String name;
     private double rating;
@@ -32,6 +37,9 @@ public class Course {
         this.signUpThrough = signUpThrough;
     }
 
+
+
+    //GETTERS AND SETTERS TO ACCESS EACH PROPERTY IN COURSES TO interact with DB (add, retrieve, insert, delete) later
 
     public int getId() {
         return id;
@@ -149,6 +157,8 @@ public class Course {
 
     @Override
     public boolean equals(Object o) {
+        //allows you to compare 2 objects' values (rather than their references)
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
@@ -157,6 +167,8 @@ public class Course {
 
     @Override
     public int hashCode() {
+        //returns distinct integers for different objects)
+
         return Objects.hash(id, name, rating, description, category, subcategory, deadline, cost, location, place, spacesAvailable, signUpThrough);
     }
 }

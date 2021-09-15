@@ -10,6 +10,9 @@ import java.util.List;
 
 @Service
 public class WishListService {
+    // BUSINESS LOGIC
+    // CALLS DataAccessService
+
     private final WishListDAO wishListDAO;
     private final CourseService courseService;
 

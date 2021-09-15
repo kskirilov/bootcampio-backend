@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public void removeUser(@PathVariable("id") int id){
+    public void removeUser(@PathVariable int id){
         userService.removeExistingUser(id);
     }
 
@@ -47,9 +47,9 @@ public class UserController {
         userService.loginUser(user);
     }
 
-    @DeleteMapping("/login/{id}")
-    public void logoutUser(@PathVariable("id") int id){
-        userService.logoutUser(id);
+    @DeleteMapping("/login")
+    public void logoutUser(@RequestParam int userID){
+        userService.logoutUser(userID);
     }
 
     @GetMapping("/login")

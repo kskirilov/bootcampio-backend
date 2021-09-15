@@ -31,7 +31,7 @@ public class CourseDataAccessService implements CourseDAO {
                 
                 INNER JOIN categories
                 ON courses.category_id = categories.id
-                INNER JOIN subcategories
+                LEFT JOIN subcategories
                 ON courses.subcategory_id = subcategories.id
                 
                 WHERE courses.id = ?
@@ -60,7 +60,7 @@ public class CourseDataAccessService implements CourseDAO {
                 
                 INNER JOIN categories
                 ON courses.category_id = categories.id
-                INNER JOIN subcategories
+                LEFT JOIN subcategories
                 ON courses.subcategory_id = subcategories.id
                 """;
 
@@ -74,40 +74,112 @@ public class CourseDataAccessService implements CourseDAO {
 
     @Override
     public int deleteCourse(int id) {
-        return 0;
+        String sql = """
+                DELETE FROM courses WHERE id = ?
+                """;
+
+        int result = jdbcTemplate.update(sql, id);
+
+        return result;
     }
 
     @Override
-    public int updateCourse(Course course) { //TODO
-        String sql = """
-        UPDATE courses SET name = ?, rating = ?, description = ?,category = ?,
-                            subcategory = ?,deadline = ?, cost = ?,location = ?, 
-                            place = ?, spaces_available = ?,sign_up_through = ? WHERE id = ? 
+    public int updateCourse(Course course) {
+        int result = 0;
+
+        String getCategoryIdSql = """
+                SELECT id FROM categories WHERE name = ?
+                """;
+
+        List<Map<String, Object>> categoryIdResult = jdbcTemplate.queryForList(getCategoryIdSql, course.getCategory().toString());
+
+        int categoryId = (int) categoryIdResult.get(0).get("id");
+
+
+        if (course.getSubcategory() != null){
+            String getSubcategoryIdSql = """
+                SELECT id FROM subcategories WHERE name = ?
+                """;
+            List<Map<String, Object>> subcategoryIdResult = jdbcTemplate.queryForList(getSubcategoryIdSql, course.getSubcategory());
+
+            int subcategoryId = (int) subcategoryIdResult.get(0).get("id");
+
+            String sql = """
+                        UPDATE courses SET name = ?, rating = ?, description = ?, category_id = ?,
+                            subcategory_id = ?, deadline = ?, cost = ?, location = CAST(? AS location_type), 
+                            place = ?, spaces_available = ?, sign_up_through = ? 
+                     
          """;
 
-        int result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
-                course.getCategory(),course.getSubcategory(), course.getDeadline(),
-                course.getCost(),course.getLocation(),course.getPlace(),
-                course.getSpacesAvailable(),course.getSignUpThrough());
+            result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
+                    categoryId, subcategoryId, course.getDeadline(),
+                    course.getCost(),course.getLocation().toString(),course.getPlace(),
+                    course.getSpacesAvailable(),course.getSignUpThrough(), course.getId());
+
+        } else {
+
+            String sql = """
+                        UPDATE courses SET name = ?, rating = ?, description = ?, category_id = ?, 
+                            subcategory_id = null,
+                            deadline = ?, cost = ?, location = CAST( ? AS location_type) , 
+                            place = ?, spaces_available = ?, sign_up_through = ? 
+                            
+                            WHERE id = ?
+                           
+                     
+         """;
+
+            result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
+                    categoryId, course.getDeadline(),
+                    course.getCost(),course.getLocation().toString(),course.getPlace(),
+                    course.getSpacesAvailable(),course.getSignUpThrough(), course.getId());
+
+        }
+
 
         return result;
     }
 
     @Override
     public int insertCourse(Course course) {
+        int result = 0;
 
-        String subcategoryIdSql = """
-                SELECT * FROM subcategories WHERE name = ?
+        String getCategoryIdSql = """
+                SELECT id FROM categories WHERE name = ?
                 """;
-        
-        String insertCourseSql = """
+
+        List<Map<String, Object>> categoryIdResult = jdbcTemplate.queryForList(getCategoryIdSql, course.getCategory().toString());
+
+        int categoryId = (int) categoryIdResult.get(0).get("id");
+
+        if(course.getSubcategory() != null){
+            String getSubcategoryIdSql = """
+                SELECT id FROM subcategories WHERE name = ?
+                """;
+
+            List<Map<String, Object>> subcategoryResult = jdbcTemplate.queryForList(getSubcategoryIdSql, course.getSubcategory());
+
+            int subcategoryId = (int) subcategoryResult.get(0).get("id");
+
+            String insertCourseSql = """
                 INSERT INTO courses(name, rating, description, category_id, subcategory_id, deadline, cost, location, place, spaces_available, sign_up_through) 
                 VALUES(?, ?, ?, ?, ?, ?, ?, CAST(? AS location_type), ?, ?, ?)
                 """;
 
-        List<Map<String, Object>> subcategoryResult = jdbcTemplate.queryForList(subcategoryIdSql, course.getSubcategory());
 
-        int result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), subcategoryResult.get(0).get("category_id"), subcategoryResult.get(0).get("id"), course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), categoryId, subcategoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+
+        } else{
+            String insertCourseSql = """
+                INSERT INTO courses(name, rating, description, category_id, subcategory_id , deadline, cost, location, place, spaces_available, sign_up_through) 
+                VALUES(?, ?, ?, ?, null, ?, ?, CAST(? AS location_type), ?, ?, ?)
+                """;
+
+
+            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), categoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+
+        }
+
 
         return result;
     }

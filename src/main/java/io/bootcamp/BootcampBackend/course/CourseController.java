@@ -29,4 +29,17 @@ public class CourseController {
     public Course selectCourseById(@PathVariable("id") int id){
         return courseService.selectCourseById(id);
     }
+
+    @PutMapping
+    public void updateCourse(@RequestBody Course course){
+        courseService.updateCourse(course);
+    }
+
+
+    @DeleteMapping("{id}")
+    public void deleteCourseById(@PathVariable("id") int id){
+        courseService.deleteCourse(id);
+    }
+
+
 }
