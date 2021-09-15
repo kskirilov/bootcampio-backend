@@ -52,6 +52,17 @@ public class WishlistDataAccessService implements WishListDAO{
         return result;
     }
 
+    @Override
+    public int deleteFromWishList(int courseID, int userID) {
+        String sql = """
+                DELETE FROM wishlist WHERE course_id = ? AND user_id = ?
+                """;
+
+        int result = jdbcTemplate.update(sql, courseID, userID);
+
+        return result;
+    }
+
 
     private RowMapper<Course> getCourseRowMapper() {
         return (resultSet, i) -> {

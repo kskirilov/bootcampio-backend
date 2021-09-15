@@ -23,4 +23,9 @@ public class WishListController{
     public void addCourseIntoWishList(@RequestParam int courseID, @RequestParam int userID ){
         wishListService.addCourseIntoWishList(courseID, userID);
     }
+
+    @DeleteMapping
+    public void deleteCourseFromWishList(@RequestParam int courseID, @RequestParam int userID ){
+        wishListService.deleteCourseFromWishList(courseID, userID);
+    }
 }

@@ -3,6 +3,7 @@ package io.bootcamp.BootcampBackend.wishlist;
 import io.bootcamp.BootcampBackend.course.Course;
 import io.bootcamp.BootcampBackend.course.CourseService;
 import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
+import io.bootcamp.BootcampBackend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +27,20 @@ public class WishListService {
         courseService.selectCourseById(courseID);
 
         if (selectWishListByUserID(userID).stream().anyMatch(c -> c.getId() == courseID)){
-            throw new AlreadyExistsException("Course already on wishlist");
+            throw new AlreadyExistsException("Course already in wishlist");
         }
 
         wishListDAO.insertIntoWishlist(courseID, userID);
+    }
+
+    public void deleteCourseFromWishList(int courseID, int userID){
+        courseService.selectCourseById(courseID);
+
+        if (!selectWishListByUserID(userID).stream().anyMatch(c -> c.getId() == courseID)){
+           throw new NotFoundException("Course not found in wishlist");
+        }
+
+        wishListDAO.deleteFromWishList(courseID, userID);
     }
 
 }
