@@ -24,4 +24,9 @@ public class CourseController {
     public List<Course> selectAllCourses(){
         return courseService.selectAllCourses();
     }
+
+    @GetMapping("{id}")
+    public Course selectCourseById(@PathVariable("id") int id){
+        return courseService.selectCourseById(id);
+    }
 }

@@ -1,6 +1,6 @@
 package io.bootcamp.BootcampBackend.user;
 
-import io.bootcamp.BootcampBackend.exception.EmailExistsException;
+import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ public class UserController {
 
 
     @PostMapping
-    public void addUser(@RequestBody User user) throws EmailExistsException {
+    public void addUser(@RequestBody User user) throws AlreadyExistsException {
         userService.addNewUser(user);
     }
 

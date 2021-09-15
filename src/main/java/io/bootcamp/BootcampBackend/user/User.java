@@ -1,7 +1,5 @@
 package io.bootcamp.BootcampBackend.user;
 
-import io.bootcamp.BootcampBackend.user.wishlist.WishList;
-
 import java.util.Objects;
 
 public class User {
@@ -9,7 +7,6 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private WishList wishlist;
     
     public User(){
         

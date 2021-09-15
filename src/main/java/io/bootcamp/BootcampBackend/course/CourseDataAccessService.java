@@ -22,7 +22,29 @@ public class CourseDataAccessService implements CourseDAO {
 
     @Override
     public Optional<Course> selectCourseById(int id) {
-        return Optional.empty();
+        String sql = """
+                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through,
+                categories.name AS category_name,
+                subcategories.name AS subcategory_name
+                
+                FROM courses 
+                
+                INNER JOIN categories
+                ON courses.category_id = categories.id
+                INNER JOIN subcategories
+                ON courses.subcategory_id = subcategories.id
+                
+                WHERE courses.id = ?
+                
+                """;
+
+        List<Course> courses = jdbcTemplate.query(sql, getCourseRowMapper(), id);
+
+        if(courses.isEmpty()){
+            return Optional.empty();
+        }
+
+        return Optional.of(courses.get(0));
     }
 
     @Override
