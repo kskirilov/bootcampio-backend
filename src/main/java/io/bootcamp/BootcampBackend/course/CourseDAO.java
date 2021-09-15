@@ -1,5 +1,7 @@
 package io.bootcamp.BootcampBackend.course;
 
+import io.bootcamp.BootcampBackend.user.User;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,5 +14,6 @@ public interface CourseDAO {
     List<Course> selectAllCourses();
     int deleteCourse(int id);
     int insertCourse (Course course);
-
+    int updateCourse(Course course);
+    //update users set num_points = 6000 where id = 2;
 }

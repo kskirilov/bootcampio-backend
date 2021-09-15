@@ -18,7 +18,8 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void addNewUser(User user) throws AlreadyExistsException {
+    public int addNewUser(User user) throws AlreadyExistsException {
+
         List<User> users = selectAllUser();
 
         if (users.contains(user)) {
@@ -31,6 +32,7 @@ public class UserService {
         if (result != 1) {
             throw new IllegalStateException("oops something went wrong with the database");
         }
+        return result;
     }
 
     public void removeExistingUser(int id) {
@@ -93,7 +95,6 @@ public class UserService {
     public List<User> selectAllOnlineUser(){
         return userDAO.selectAllOnlineUser();
     }
-
 
 
     private boolean doesUserWithIDExist(int id){

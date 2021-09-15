@@ -1,12 +1,28 @@
 package io.bootcamp.BootcampBackend.user;
 
+<<<<<<< HEAD
+=======
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.time.LocalDate;
+>>>>>>> bd5a14e083d1663a3653fc40324e7224be08b542
 import java.util.Objects;
 
 public class User {
+    //          USER table
+    // id | name | email | password
+    // 1  | gerog| g@gm  |  dwqdq
+
     private int id;
     private String name;
     private String email;
     private String password;
+<<<<<<< HEAD
+=======
+    private WishList wishlist; //user clicks on course -> post request to wishlist table (INSERT INTO wishlist(course, user) values(course.id, user.id);
+                                //if course is already in wishlist table (for that user) => DELETE wishlist.id WHERE user=? AND wishlist.id=?
+    private LocalDate signUpDate;
+>>>>>>> bd5a14e083d1663a3653fc40324e7224be08b542
     
     public User(){
         
