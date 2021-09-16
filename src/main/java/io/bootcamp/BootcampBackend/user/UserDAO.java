@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface UserDAO {
     Optional<User> selectUserById(int id);
     Optional<User> selectUserByEmail(String email);
-    List<User> selectAllUser();
+    List<User> selectAllUserSortBy(String input);
     int deleteUser(int id);
     int insertUser (User user);
     int updateUser(User user);

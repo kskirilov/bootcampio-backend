@@ -21,8 +21,8 @@ public class CourseController {
     }
 
     @GetMapping
-    public List<Course> selectAllCourses(){
-        return courseService.selectAllCourses();
+    public List<Course> sortAllCourses(@RequestParam(defaultValue = "id") String sort){
+        return courseService.selectAllCourses(sort);
     }
 
     @GetMapping("{id}")

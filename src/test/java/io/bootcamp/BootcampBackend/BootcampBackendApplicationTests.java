@@ -34,7 +34,7 @@ class BootcampBackendApplicationTests {
 	void itCanAddUser() {
 		User fatma = new User(1, "Fatma", "fatma@gmail.com", "yolo");
 
-		Mockito.when(UserDAO.selectAllUser()).thenReturn(
+		Mockito.when(UserDAO.selectAllUserSortBy("id")).thenReturn(
 				List.of(new User(2, "Silvia", "silvia@gmail.com", "carpediem"))
 		);
 
@@ -58,10 +58,10 @@ class BootcampBackendApplicationTests {
 				new User(2, "Fatma", "fatma@gmail.com", "yolo"));
 				new User(5, "Silvia","silvia@gmail.com", "carpediem");
 
-		Mockito.when(UserDAO.selectAllUser()).thenReturn(Users);
+		Mockito.when(UserDAO.selectAllUserSortBy("id")).thenReturn(Users);
 
 		//Given
-		List<User> UserDAOList = underTest.selectAllUser();
+		List<User> UserDAOList = underTest.selectAllUser("id");
 
 		// Then
 		assertThat(Users).isEqualTo(UserDAOList);

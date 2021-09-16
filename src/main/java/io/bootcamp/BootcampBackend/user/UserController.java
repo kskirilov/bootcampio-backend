@@ -16,8 +16,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> selectAllUser(){
-        return userService.selectAllUser();
+    public List<User> selectAllUser(@RequestParam(defaultValue = "id") String sort){
+        return userService.selectAllUser(sort);
     }
 
     @GetMapping("{id}")

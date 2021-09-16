@@ -11,7 +11,7 @@ public interface CourseDAO {
     // but it could be any other persistence mechanism) using an abstract API.
 
     Optional<Course> selectCourseById(int id);
-    List<Course> selectAllCourses();
+    List<Course> selectAllCoursesSortBy(String input);
     int deleteCourse(int id);
     int insertCourse (Course course);
     int updateCourse(Course course);

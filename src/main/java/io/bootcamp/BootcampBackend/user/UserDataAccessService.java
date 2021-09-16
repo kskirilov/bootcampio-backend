@@ -51,10 +51,11 @@ public class UserDataAccessService implements UserDAO {
 
 
     @Override
-    public List<User> selectAllUser() {
+    public List<User> selectAllUserSortBy(String input) {
         String sql = """
                 SELECT * FROM users
-                """;
+                ORDER BY
+                """ + input;
 
         List<User> users = jdbcTemplate.query(sql, getUserRowMapper());
 

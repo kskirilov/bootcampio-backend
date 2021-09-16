@@ -13,9 +13,6 @@ public class User {
     private String name;
     private String email;
     private String password;
-
-    private WishList wishlist; //user clicks on course -> post request to wishlist table (INSERT INTO wishlist(course, user) values(course.id, user.id);
-                                //if course is already in wishlist table (for that user) => DELETE wishlist.id WHERE user=? AND wishlist.id=?
     private LocalDate signUpDate;
 
     public User(){

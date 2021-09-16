@@ -20,7 +20,7 @@ public class UserService {
 
     public int addNewUser(User user) throws AlreadyExistsException {
 
-        List<User> users = selectAllUser();
+        List<User> users = selectAllUser("id");
 
         if (users.contains(user)) {
             throw new AlreadyExistsException(
@@ -47,8 +47,8 @@ public class UserService {
         }
     }
 
-    public List<User> selectAllUser(){
-        return userDAO.selectAllUser();
+    public List<User> selectAllUser(String input){
+        return userDAO.selectAllUserSortBy(input);
     }
 
     public User selectUserById(int id){
@@ -98,7 +98,7 @@ public class UserService {
 
 
     private boolean doesUserWithIDExist(int id){
-        return selectAllUser().stream().anyMatch(p -> p.getId() == id);
+        return selectAllUser("id").stream().anyMatch(p -> p.getId() == id);
     }
 
 

@@ -17,12 +17,8 @@ public class CourseService {
     public void addNewCourse(Course course){
         int result = courseDAO.insertCourse(course);
         if (result != 1) {
-            throw new IllegalStateException("oops something went wrong");
+            throw new IllegalStateException("oops something went wrong in the database");
         }
-    }
-
-    public List<Course> selectAllCourses() {
-        return courseDAO.selectAllCourses();
     }
 
     public Course selectCourseById(int id){
@@ -44,5 +40,9 @@ public class CourseService {
         if (result != 1) {
             throw new IllegalStateException("oops something went wrong in the database");
         }
+    }
+
+    public List<Course> selectAllCourses(String input){
+        return courseDAO.selectAllCoursesSortBy(input);
     }
 }

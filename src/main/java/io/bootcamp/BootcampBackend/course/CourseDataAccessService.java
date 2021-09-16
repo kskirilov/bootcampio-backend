@@ -1,8 +1,6 @@
 package io.bootcamp.BootcampBackend.course;
 
-import io.bootcamp.BootcampBackend.user.User;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -46,30 +44,6 @@ public class CourseDataAccessService implements CourseDAO {
 
         return Optional.of(courses.get(0));
     }
-
-    @Override
-    public List<Course> selectAllCourses() {
-
-        String selectAllCourses = """
-                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through,
-                categories.name AS category_name,
-                subcategories.name AS subcategory_name
-                
-                FROM courses 
-
-                
-                INNER JOIN categories
-                ON courses.category_id = categories.id
-                LEFT JOIN subcategories
-                ON courses.subcategory_id = subcategories.id
-                """;
-
-        List<Course> result = jdbcTemplate.query(selectAllCourses, getCourseRowMapper());
-
-        return result;
-
-    }
-
 
 
     @Override
@@ -136,6 +110,30 @@ public class CourseDataAccessService implements CourseDAO {
 
         }
 
+
+        return result;
+    }
+
+    @Override
+    public List<Course> selectAllCoursesSortBy(String input) {
+
+        String selectAllCourses = """
+                SELECT courses.id, courses.name, courses.rating, courses.description, categories.name, subcategories.name, courses.deadline, courses.cost, courses.location, courses.place, courses.spaces_available, courses.sign_up_through,
+                courses.name AS course_name,
+                categories.name AS category_name,
+                subcategories.name AS subcategory_name
+                
+                FROM courses 
+                
+                INNER JOIN categories
+                ON courses.category_id = categories.id
+                LEFT JOIN subcategories
+                ON courses.subcategory_id = subcategories.id
+                
+                ORDER BY 
+                """ + input;
+
+        List<Course> result = jdbcTemplate.query(selectAllCourses, getCourseRowMapper());
 
         return result;
     }

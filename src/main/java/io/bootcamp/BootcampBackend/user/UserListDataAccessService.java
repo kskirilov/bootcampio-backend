@@ -18,7 +18,7 @@ public class UserListDataAccessService implements UserDAO{
     }
 
     @Override
-    public List<User> selectAllUser() {
+    public List<User> selectAllUserSortBy(String input) {
         return null;
     }
 
