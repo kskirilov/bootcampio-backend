@@ -2,6 +2,8 @@
 This project was created as part of Bright Network Tech Academy, composing key layers of web app backend.  
 To understand the thought process of this project, please go through the comments in commit history.
 
+**This is open source code for learning purposes, all rights reserved by the code owner**
+
 ### Table of contents
 - [Introduction](#introduction)
 - [Technologies](#technologies)
@@ -62,7 +64,8 @@ The request body needs to be in JSON format and include the following properties
 
 Example
 ```
-{     "name" "Jack N"
+{     
+      "name" "Jack N"
       "email": "prince@gmail.com",
       "password":"pass"
 }
