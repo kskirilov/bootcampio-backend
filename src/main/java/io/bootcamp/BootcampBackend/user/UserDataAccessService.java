@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -119,12 +121,13 @@ public class UserDataAccessService implements UserDAO {
     @Override
     public List<User> selectAllOnlineUser() {
         String sql = """
-                SELECT users.id, users.name, users.email FROM users
+                SELECT users.id, users.name, users.email, sessions.lastseen FROM users
                 INNER JOIN sessions
                 ON sessions.user_id = users.id
                 """;
 
         List<User> onlineUsers = jdbcTemplate.query(sql, getOnlineUserRowMapper());
+        System.out.println(onlineUsers);
         return onlineUsers;
     }
 
@@ -134,7 +137,10 @@ public class UserDataAccessService implements UserDAO {
                     resultSet.getInt("id"),
                     resultSet.getString("name"),
                     resultSet.getString("email"),
-                    resultSet.getString("password"));
+                    resultSet.getString("password"),
+                    resultSet.getTimestamp("created_at").toLocalDateTime(),
+                    resultSet.getTimestamp("updated_at").toLocalDateTime()
+            );
         };
     }
 
@@ -144,7 +150,8 @@ public class UserDataAccessService implements UserDAO {
             return new User(
                     resultSet.getInt("id"),
                     resultSet.getString("name"),
-                    resultSet.getString("email"));
+                    resultSet.getString("email"),
+                    resultSet.getTimestamp("lastseen").toLocalDateTime());
         };
     }
 

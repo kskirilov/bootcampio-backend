@@ -13,8 +13,6 @@ import java.util.List;
 public class WishlistDataAccessService implements WishListDAO{
     // Makes the calls to the databases (CALLED FROM WishListService)
 
-
-
     //wishlist is a table which stores the user_id and course_id whenever a user adds a course to their wishlist
     //it has a select, insert and delete function
     //       WISHLIST TABLE
@@ -40,7 +38,7 @@ public class WishlistDataAccessService implements WishListDAO{
                 
                 INNER JOIN categories
                 ON courses.category_id = categories.id
-                INNER JOIN subcategories
+                LEFT JOIN subcategories
                 ON courses.subcategory_id = subcategories.id
                 INNER JOIN wishlist
                 ON wishlist.course_id = courses.id

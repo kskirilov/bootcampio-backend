@@ -9,7 +9,7 @@ import java.util.Optional;
 public class UserListDataAccessService implements UserDAO{
     @Override
     public Optional<User> selectUserById(int id) {
-        return Optional.of(new User(1, "Silvia", "", ""));
+        return Optional.empty();
     }
 
     @Override

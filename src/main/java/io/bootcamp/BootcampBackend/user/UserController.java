@@ -2,6 +2,7 @@ package io.bootcamp.BootcampBackend.user;
 
 import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
+import io.bootcamp.BootcampBackend.util.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,24 +33,25 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public void removeUser(@PathVariable int id){
-        userService.removeExistingUser(id);
+    public Response removeUser(@PathVariable int id){
+        return userService.removeExistingUser(id);
     }
 
     @PutMapping
-    public void updateUser(@RequestBody User user){
-        userService.updateUser(user);
+    public Response updateUser(@RequestBody User user){
+        return userService.updateUser(user);
     }
 
 
     @PostMapping("/login")
-    public void loginUser(@RequestBody User user) throws IncorrectCredentialException {
-        userService.loginUser(user);
+    public Response loginUser(@RequestBody User user) throws IncorrectCredentialException {
+        return userService.loginUser(user);
     }
 
     @DeleteMapping("/login")
-    public void logoutUser(@RequestParam int userID){
-        userService.logoutUser(userID);
+    public Response logoutUser(@RequestParam int userID){
+
+        return userService.logoutUser(userID);
     }
 
     @GetMapping("/login")

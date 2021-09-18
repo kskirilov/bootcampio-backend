@@ -79,13 +79,13 @@ public class CourseDataAccessService implements CourseDAO {
             int subcategoryId = (int) subcategoryIdResult.get(0).get("id");
 
             String sql = """
-                        UPDATE courses SET name = ?, rating = ?, description = ?, category_id = ?,
+                        UPDATE courses SET name = ?, description = ?, category_id = ?,
                             subcategory_id = ?, deadline = ?, cost = ?, location = CAST(? AS location_type), 
                             place = ?, spaces_available = ?, sign_up_through = ? 
                      
          """;
 
-            result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
+            result = jdbcTemplate.update(sql, course.getName(), course.getDescription(),
                     categoryId, subcategoryId, course.getDeadline(),
                     course.getCost(),course.getLocation().toString(),course.getPlace(),
                     course.getSpacesAvailable(),course.getSignUpThrough(), course.getId());
@@ -93,7 +93,7 @@ public class CourseDataAccessService implements CourseDAO {
         } else {
 
             String sql = """
-                        UPDATE courses SET name = ?, rating = ?, description = ?, category_id = ?, 
+                        UPDATE courses SET name = ?, description = ?, category_id = ?, 
                             subcategory_id = null,
                             deadline = ?, cost = ?, location = CAST( ? AS location_type) , 
                             place = ?, spaces_available = ?, sign_up_through = ? 
@@ -103,7 +103,7 @@ public class CourseDataAccessService implements CourseDAO {
                      
          """;
 
-            result = jdbcTemplate.update(sql, course.getName(), course.getRating(), course.getDescription(),
+            result = jdbcTemplate.update(sql, course.getName(), course.getDescription(),
                     categoryId, course.getDeadline(),
                     course.getCost(),course.getLocation().toString(),course.getPlace(),
                     course.getSpacesAvailable(),course.getSignUpThrough(), course.getId());
@@ -160,21 +160,21 @@ public class CourseDataAccessService implements CourseDAO {
             int subcategoryId = (int) subcategoryResult.get(0).get("id");
 
             String insertCourseSql = """
-                INSERT INTO courses(name, rating, description, category_id, subcategory_id, deadline, cost, location, place, spaces_available, sign_up_through) 
+                INSERT INTO courses(name, description, category_id, subcategory_id, deadline, cost, location, place, spaces_available, sign_up_through) 
                 VALUES(?, ?, ?, ?, ?, ?, ?, CAST(? AS location_type), ?, ?, ?)
                 """;
 
 
-            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), categoryId, subcategoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getDescription(), categoryId, subcategoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
 
         } else{
             String insertCourseSql = """
-                INSERT INTO courses(name, rating, description, category_id, subcategory_id , deadline, cost, location, place, spaces_available, sign_up_through) 
+                INSERT INTO courses(name, description, category_id, subcategory_id , deadline, cost, location, place, spaces_available, sign_up_through) 
                 VALUES(?, ?, ?, ?, null, ?, ?, CAST(? AS location_type), ?, ?, ?)
                 """;
 
 
-            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getRating(), course.getDescription(), categoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
+            result = jdbcTemplate.update(insertCourseSql, course.getName(), course.getDescription(), categoryId, course.getDeadline(), course.getCost(), course.getLocation().toString(), course.getPlace(), course.getSpacesAvailable(), course.getSignUpThrough());
 
         }
 

@@ -1,6 +1,8 @@
 package io.bootcamp.BootcampBackend.wishlist;
 
 import io.bootcamp.BootcampBackend.course.Course;
+import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
+import io.bootcamp.BootcampBackend.util.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,18 +18,18 @@ public class WishListController{
         this.wishListService = wishListService;
     }
 
-    @GetMapping
-    public List<Course> selectWishListByUserID(@RequestParam int userID){
+    @GetMapping("{id}")
+    public List<Course> selectWishListByUserID(@PathVariable("id") int userID){
         return wishListService.selectWishListByUserID(userID);
     }
 
-    @PostMapping
-    public void addCourseIntoWishList(@RequestParam int courseID, @RequestParam int userID ){
-        wishListService.addCourseIntoWishList(courseID, userID);
+    @PostMapping("{id}")
+    public Response addCourseIntoWishList(@PathVariable("id") int userID, @RequestParam int courseID ){
+        return wishListService.addCourseIntoWishList(courseID, userID);
     }
 
-    @DeleteMapping
-    public void deleteCourseFromWishList(@RequestParam int courseID, @RequestParam int userID ){
-        wishListService.deleteCourseFromWishList(courseID, userID);
+    @DeleteMapping("{id}")
+    public Response deleteCourseFromWishList(@PathVariable("id") int userID, @RequestParam int courseID ){
+        return wishListService.deleteCourseFromWishList(courseID, userID);
     }
 }
