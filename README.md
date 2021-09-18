@@ -69,13 +69,14 @@ Example
 ```
 
 #### Login as a user
-POST `users/login`
+POST `/users/login`
 Allows the registerd user to login, requires the following parameters
 - `name` - string, required
 - `password` - string, required
 
-Throws an authorized error if password incorrect. To change the password, send PUT request to `\users`
+Throws an authorized error if password incorrect. To change the password, send PUT request to `\users`  
 
+To logout, send DELETE request to the endpoint
 #### Add course to wishlist
 POST `/wishlist/[insert user id]?courseID=[insert course id]`
 
