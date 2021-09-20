@@ -1,50 +1,103 @@
 package io.bootcamp.BootcampBackend.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.bootcamp.BootcampBackend.feedback.Feedback;
+import io.bootcamp.BootcampBackend.session.Session;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
+@Entity(name = "User")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "user_email_unique", columnNames = "email")
+        }
+)
 public class User {
-    //          USER table
-    // id | name | email | password
-    // 1  | gerog| g@gm  |  dwqdq
-
+    @Id
+    @SequenceGenerator(
+            name = "user_sequence",
+            sequenceName = "user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_sequence"
+    )
+    @Column(
+            name = "id",
+            updatable = false
+    )
     private int id;
+
+    @Column(
+            name = "name",
+            nullable = false
+//            columnDefinition = "VARCHAR(255)"
+    )
     private String name;
+
+    @Column(
+            name = "email",
+            nullable = false
+//            columnDefinition = "VARCHAR(255)"
+    )
     private String email;
+
+    @Column(
+            name = "password",
+            nullable = false,
+            columnDefinition = "CHAR(60)"
+    )
     private String password;
+
+    @Column(
+            name = "created_at",
+            nullable = false,
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
+    )
+    @CreationTimestamp
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime lastSeen;
+
+    @Column(
+            name = "updated_at"
+    )
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
+    @OneToOne(mappedBy = "userId")
+    private Session session;
+
+    @OneToMany(
+            mappedBy = "userId",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Feedback> feedback = new ArrayList<>();
+
+//    @PrePersist
+//    protected void onCreate() {
+//        createdAt = new Date();
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate() {
+//        updatedAt = new Date();
+//    }
 
     public User(){};
-    public User(int id, String name, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime lastSeen) {
-        this.id = id;
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.lastSeen = lastSeen;
-    }
-
-    public User(int id, String name, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-
-    public User(int id, String name, String email, LocalDateTime lastSeen) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.lastSeen = lastSeen;
     }
 
     public int getId() {
@@ -87,20 +140,30 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getLastSeen() {
-        return lastSeen;
+    public void addFeedback(Feedback feedback){
+        if(!this.feedback.contains(feedback)){
+            this.feedback.add(feedback);
+            feedback.setUserId(this);
+        }
     }
 
-    public void setLastSeen(LocalDateTime lastSeen) {
-        this.lastSeen = lastSeen;
+    public void removeFeedback(Feedback feedback){
+        if(this.feedback.contains(feedback)){
+            this.feedback.remove(feedback);
+            feedback.setUserId(null);
+        }
+    }
+
+    public List<Feedback> getFeedback(){
+        return feedback;
     }
 
     @Override
@@ -112,7 +175,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", lastSeen=" + lastSeen +
                 '}';
     }
 
@@ -121,11 +183,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(lastSeen, user.lastSeen);
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, createdAt, updatedAt, lastSeen);
+        return Objects.hash(id, name, email, password, createdAt, updatedAt);
     }
 }
