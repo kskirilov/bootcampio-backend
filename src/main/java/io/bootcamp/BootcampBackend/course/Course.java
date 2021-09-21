@@ -1,6 +1,8 @@
 package io.bootcamp.BootcampBackend.course;
 
+import io.bootcamp.BootcampBackend.Wishlist;
 import io.bootcamp.BootcampBackend.feedback.Feedback;
+import io.bootcamp.BootcampBackend.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -98,6 +100,12 @@ public class Course {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private List<Feedback> feedback = new ArrayList<>();
+
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "course"
+    )
+    private List<Wishlist> wishlists = new ArrayList<>();
 
     public Course(){};
 
@@ -231,6 +239,19 @@ public class Course {
 
     public List<Feedback> getFeedback(){
         return feedback;
+    }
+
+    public List<Wishlist> getWishlists(){
+        return wishlists;
+    }
+    public void addToWishlist(Wishlist wishlist){
+        if(!wishlists.contains(wishlist)){
+            wishlists.add(wishlist);
+        }
+    }
+
+    public void removeFromWishlist(Wishlist wishlist){
+        wishlists.remove(wishlist);
     }
 
     @Override

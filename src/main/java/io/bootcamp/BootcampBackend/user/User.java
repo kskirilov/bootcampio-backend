@@ -1,7 +1,8 @@
 package io.bootcamp.BootcampBackend.user;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.bootcamp.BootcampBackend.Wishlist;
+import io.bootcamp.BootcampBackend.course.Course;
 import io.bootcamp.BootcampBackend.feedback.Feedback;
-import io.bootcamp.BootcampBackend.session.Session;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -66,14 +67,16 @@ public class User {
     private LocalDateTime createdAt;
 
     @Column(
-            name = "updated_at"
+            name = "updated_at",
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "userId")
-    private Session session;
+    @Column(
+            name = "last_seen",
+            columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
+    )
+    private LocalDateTime lastSeen;
 
     @OneToMany(
             mappedBy = "userId",
@@ -83,21 +86,25 @@ public class User {
     )
     private List<Feedback> feedback = new ArrayList<>();
 
-//    @PrePersist
-//    protected void onCreate() {
-//        createdAt = new Date();
-//    }
-//
-//    @PreUpdate
-//    protected void onUpdate() {
-//        updatedAt = new Date();
-//    }
+    @OneToMany(
+            cascade = {CascadeType.REMOVE},
+            orphanRemoval = true,
+            mappedBy = "user"
+    )
+    private List<Wishlist> wishlists = new ArrayList<>();
 
     public User(){};
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String name, String email, String password, LocalDateTime updatedAt) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -140,12 +147,20 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(LocalDateTime lastSeen) {
+        this.lastSeen = lastSeen;
     }
 
     public void addFeedback(Feedback feedback){
@@ -166,6 +181,18 @@ public class User {
         return feedback;
     }
 
+    public List<Wishlist> getWishlists(){
+        return wishlists;
+    }
+    public void addToWishlist(Wishlist wishlist){
+        if(!wishlists.contains(wishlist)){
+            wishlists.add(wishlist);
+        }
+    }
+
+    public void removeFromWishlist(Wishlist wishlist){
+        wishlists.remove(wishlist);
+    }
     @Override
     public String toString() {
         return "User{" +
@@ -175,6 +202,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", lastSeen=" + lastSeen +
                 '}';
     }
 
@@ -183,11 +211,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(lastSeen, user.lastSeen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, createdAt, updatedAt);
+        return Objects.hash(id, name, email, password, createdAt, updatedAt, lastSeen);
     }
 }
