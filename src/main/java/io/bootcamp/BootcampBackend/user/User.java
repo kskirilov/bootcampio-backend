@@ -1,15 +1,11 @@
 package io.bootcamp.BootcampBackend.user;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.bootcamp.BootcampBackend.Wishlist;
-import io.bootcamp.BootcampBackend.course.Course;
+import io.bootcamp.BootcampBackend.wishlist.Wishlist;
 import io.bootcamp.BootcampBackend.feedback.Feedback;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,8 +83,7 @@ public class User {
     private List<Feedback> feedback = new ArrayList<>();
 
     @OneToMany(
-            cascade = {CascadeType.REMOVE},
-            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             mappedBy = "user"
     )
     private List<Wishlist> wishlists = new ArrayList<>();
@@ -193,6 +188,11 @@ public class User {
     public void removeFromWishlist(Wishlist wishlist){
         wishlists.remove(wishlist);
     }
+
+    public void deleteWishlist(){
+        wishlists = null;
+    }
+
     @Override
     public String toString() {
         return "User{" +

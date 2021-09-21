@@ -7,19 +7,14 @@ import io.bootcamp.BootcampBackend.course.CourseRepository;
 import io.bootcamp.BootcampBackend.course.Location;
 import io.bootcamp.BootcampBackend.user.User;
 import io.bootcamp.BootcampBackend.user.UserRepository;
+import io.bootcamp.BootcampBackend.wishlist.Wishlist;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
-import java.beans.BeanProperty;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

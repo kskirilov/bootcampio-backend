@@ -1,4 +1,4 @@
-package io.bootcamp.BootcampBackend;
+package io.bootcamp.BootcampBackend.wishlist;
 
 import io.bootcamp.BootcampBackend.course.Course;
 import io.bootcamp.BootcampBackend.user.User;
@@ -80,4 +80,5 @@ public class Wishlist {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
 }

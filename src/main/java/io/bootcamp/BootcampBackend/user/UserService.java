@@ -1,20 +1,16 @@
 package io.bootcamp.BootcampBackend.user;
 
-import io.bootcamp.BootcampBackend.course.Course;
-import io.bootcamp.BootcampBackend.course.CourseRepository;
 import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
 import io.bootcamp.BootcampBackend.exception.NotFoundException;
-import org.apache.tomcat.jni.Local;
+import io.bootcamp.BootcampBackend.wishlist.WishlistRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,15 +20,17 @@ import java.util.Optional;
 @Service
 public class UserService implements UserManagement{
     private final UserRepository userRepository;
+    private final WishlistRepository wishlistRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, WishlistRepository wishlistRepository) {
          this.userRepository = userRepository;
+         this.wishlistRepository = wishlistRepository;
     }
 
     @Transactional
     @Override
     public void addNewUser(UserDTO userDTO) throws AlreadyExistsException {
-        if (!userRepository.findUserByEmail(userDTO.getEmail()).isEmpty()){
+        if (userRepository.findUserByEmail(userDTO.getEmail()).isPresent()){
             throw new AlreadyExistsException("User already exists!");
         }
 
@@ -47,10 +45,12 @@ public class UserService implements UserManagement{
     @Transactional
     @Override
     public void removeExistingUser(int id) {
-
-        if (userRepository.findById(id) == null) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
             throw new NotFoundException("User does not exist");
         }
+
+        //Cannot delete if user has courses on wishlist
 
         int result = userRepository.deleteUserById(id);
         if (result != 1) {

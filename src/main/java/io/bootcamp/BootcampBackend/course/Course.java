@@ -1,8 +1,7 @@
 package io.bootcamp.BootcampBackend.course;
 
-import io.bootcamp.BootcampBackend.Wishlist;
+import io.bootcamp.BootcampBackend.wishlist.Wishlist;
 import io.bootcamp.BootcampBackend.feedback.Feedback;
-import io.bootcamp.BootcampBackend.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;

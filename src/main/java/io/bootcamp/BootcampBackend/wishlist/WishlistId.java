@@ -1,4 +1,4 @@
-package io.bootcamp.BootcampBackend;
+package io.bootcamp.BootcampBackend.wishlist;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
