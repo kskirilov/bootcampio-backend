@@ -3,7 +3,6 @@ package io.bootcamp.BootcampBackend.user;
 import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
 import io.bootcamp.BootcampBackend.exception.NotFoundException;
-import io.bootcamp.BootcampBackend.wishlist.WishlistRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +19,9 @@ import java.util.Optional;
 @Service
 public class UserService implements UserManagement{
     private final UserRepository userRepository;
-    private final WishlistRepository wishlistRepository;
 
-    public UserService(UserRepository userRepository, WishlistRepository wishlistRepository) {
+    public UserService(UserRepository userRepository) {
          this.userRepository = userRepository;
-         this.wishlistRepository = wishlistRepository;
     }
 
     @Transactional
