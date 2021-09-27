@@ -2,6 +2,9 @@
 This project was created as part of Bright Network Tech Academy, composing key layers of web app backend.  
 To understand the thought process of this project, please go through the comments in commit history.
 
+The JPA branch and main branch are completely separate. 
+JPA branch uses Spring Data JPA to initialise database, recommended using the JPA branch over main for the ease of database setup.
+
 **This is open source code for learning purposes only, all rights reserved by the code owner**
 
 ### Table of contents
@@ -35,7 +38,6 @@ Example
 ```
 {
 "name": "How to be a part-time youtuber",
-"rating": 4,
 "description": "super cool",
 "category": "YOUTUBE",
 "deadline": "2022-01-05",
@@ -104,7 +106,10 @@ Example
 }
 ```
 
-All four main endpoints, `users`, `courses`, `wishlist`, `feedback` have all the core CRUD functionalities.
+All four main endpoints, `users`, `courses`, `wishlist`, `feedback` have all the core CRUD functionalities  
+(except `Wishlist`, only has GET, POST, DELETE, and only need query parameters).  
+
+Everytime user add a feedback, the rating property of course will be automically calculated.
 
 ## Technologies
 Project is created with:
