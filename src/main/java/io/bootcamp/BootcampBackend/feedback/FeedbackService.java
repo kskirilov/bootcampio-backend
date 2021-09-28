@@ -8,6 +8,7 @@ import io.bootcamp.BootcampBackend.user.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class FeedbackService implements FeedbackManagement {
         return feedbacks;
     }
 
+    @Transactional
     @Override
     public void insertFeedback(FeedbackDTO feedbackDTO) {
         System.out.println(feedbackDTO);
@@ -77,6 +79,7 @@ public class FeedbackService implements FeedbackManagement {
         courseRepository.updateCourseRating(feedback.getCourseId().getId(), rating);
     }
 
+    @Transactional
     @Override
     public void updateFeedback(FeedbackDTO feedbackDTO) {
         if (selectAllFeedbackBy(feedbackDTO.getCourseId(), feedbackDTO.getUserId()).isEmpty()){
@@ -91,6 +94,7 @@ public class FeedbackService implements FeedbackManagement {
         courseRepository.updateCourseRating(feedback.getCourseId().getId(), rating);
     }
 
+    @Transactional
     @Override
     public void deleteFeedback(int courseId, int userId) {
         if (selectAllFeedbackBy(courseId, userId).isEmpty()){

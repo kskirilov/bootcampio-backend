@@ -9,6 +9,7 @@ import io.bootcamp.BootcampBackend.user.User;
 import io.bootcamp.BootcampBackend.user.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class WishlistService implements WishlistManagement{
         return courses;
     }
 
+    @Transactional
     @Override
     public void addCourseIntoWishlist(int courseID, int userID){
 
@@ -57,6 +59,7 @@ public class WishlistService implements WishlistManagement{
         wishlistRepository.save(wishlist);
     }
 
+    @Transactional
     @Override
     public void deleteCourseFromWishlist(int courseID, int userID){
 

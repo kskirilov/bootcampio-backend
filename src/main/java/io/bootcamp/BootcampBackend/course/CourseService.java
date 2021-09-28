@@ -5,6 +5,7 @@ import io.bootcamp.BootcampBackend.user.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class CourseService implements CourseManagement{
         this.courseRepository = courseRepository;
     }
 
+    @Transactional
     @Override
     public void addNewCourse(CourseDTO courseDTO) {
         Course course = new Course();
@@ -29,6 +31,7 @@ public class CourseService implements CourseManagement{
         }
     }
 
+    @Transactional
     @Override
     public void updateCourse(CourseDTO courseDTO) {
         if (courseDTO == null || courseDTO.getId() == 0) {
@@ -45,6 +48,7 @@ public class CourseService implements CourseManagement{
 
     }
 
+    @Transactional
     @Override
     public void deleteCourseById(int id) {
         Optional<Course> course = courseRepository.findById(id);
