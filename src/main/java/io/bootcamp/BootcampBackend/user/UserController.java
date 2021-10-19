@@ -2,7 +2,6 @@ package io.bootcamp.BootcampBackend.user;
 
 import io.bootcamp.BootcampBackend.exception.AlreadyExistsException;
 import io.bootcamp.BootcampBackend.exception.IncorrectCredentialException;
-import io.bootcamp.BootcampBackend.util.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,46 +16,45 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> selectAllUser(@RequestParam(defaultValue = "id") String sort){
-        return userService.selectAllUser(sort);
+    public List<UserDTO> selectAllUser(@RequestParam(defaultValue = "id") String sort){
+        return userService.selectAllUsers(sort);
     }
 
     @GetMapping("{id}")
-    public User selectUserById(@PathVariable("id") int id){
+    public UserDTO selectUserById(@PathVariable("id") int id){
         return userService.selectUserById(id);
     }
 
 
     @PostMapping
-    public void addUser(@RequestBody User user) throws AlreadyExistsException {
-        userService.addNewUser(user);
+    public void addUser(@RequestBody UserDTO userDTO) throws AlreadyExistsException {
+        userService.addNewUser(userDTO);
     }
 
     @DeleteMapping("{id}")
-    public Response removeUser(@PathVariable int id){
-        return userService.removeExistingUser(id);
+    public void removeUser(@PathVariable int id){
+        userService.removeExistingUser(id);
     }
 
     @PutMapping
-    public Response updateUser(@RequestBody User user){
-        return userService.updateUser(user);
+    public void updateUser(@RequestBody UserDTO userDTO){
+        userService.updateUser(userDTO);
     }
 
 
     @PostMapping("/login")
-    public Response loginUser(@RequestBody User user) throws IncorrectCredentialException {
-        return userService.loginUser(user);
+    public void loginUser(@RequestBody UserDTO userDTO) throws IncorrectCredentialException {
+        userService.loginUser(userDTO);
     }
 
     @DeleteMapping("/login")
-    public Response logoutUser(@RequestParam int userID){
-
-        return userService.logoutUser(userID);
+    public void logoutUser(@RequestBody UserDTO userDTO){
+        userService.logoutUser(userDTO);
     }
 
     @GetMapping("/login")
-    public List<User> selectAllOnlineUser(){
-        return userService.selectAllOnlineUser();
+    public List<UserDTO> selectAllOnlineUser(){
+        return userService.selectAllOnlineUsers();
     }
 
 }

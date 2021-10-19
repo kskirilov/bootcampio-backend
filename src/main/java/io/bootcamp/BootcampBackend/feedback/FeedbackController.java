@@ -1,6 +1,5 @@
 package io.bootcamp.BootcampBackend.feedback;
 
-import io.bootcamp.BootcampBackend.util.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,29 +14,29 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public List<Feedback> selectAllFeedback(){
-        return feedbackService.selectAllFeedback();
+    public List<FeedbackDTO> selectAllFeedback(@RequestParam(defaultValue = "id") String sort){
+        return feedbackService.selectAllFeedback(sort);
     }
 
     @GetMapping("filter")
-    public List<Feedback> selectAllFeedbackForCourse(@RequestParam(defaultValue = "0", required = false) int courseID,
+    public List<FeedbackDTO> selectAllFeedbackForCourse(@RequestParam(defaultValue = "0", required = false) int courseID,
                                                      @RequestParam(defaultValue = "0", required = false) int userID){
         return feedbackService.selectAllFeedbackBy(courseID, userID);
     }
 
     @DeleteMapping
-    public Response deleteFeedback(@RequestParam int courseID, @RequestParam int userID){
-        return feedbackService.deleteFeedback(courseID, userID);
+    public void deleteFeedback(@RequestParam int courseID, @RequestParam int userID){
+        feedbackService.deleteFeedback(courseID, userID);
     }
 
     @PostMapping
-    public Response addFeedback(@RequestBody Feedback feedback){
-        return feedbackService.insertFeedback(feedback);
+    public void addFeedback(@RequestBody FeedbackDTO feedbackDTO){
+        feedbackService.insertFeedback(feedbackDTO);
     }
 
     @PutMapping
-    public Response updateFeedback(@RequestBody Feedback feedback){
-        return feedbackService.updateFeedback(feedback);
+    public void updateFeedback(@RequestBody FeedbackDTO feedbackDTO){
+        feedbackService.updateFeedback(feedbackDTO);
     }
 
 }

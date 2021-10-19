@@ -1,48 +1,122 @@
 package io.bootcamp.BootcampBackend.course;
 
 import io.bootcamp.BootcampBackend.exception.NotFoundException;
+import io.bootcamp.BootcampBackend.user.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CourseService {
-    private final CourseDAO courseDAO;
+public class CourseService implements CourseManagement{
+    private CourseRepository courseRepository;
 
-    public CourseService(CourseDataAccessService courseDataAccessService) {
-        this.courseDAO = courseDataAccessService;
+    public CourseService(CourseRepository courseRepository){
+        this.courseRepository = courseRepository;
     }
 
-    public void addNewCourse(Course course){
-        int result = courseDAO.insertCourse(course);
-        if (result != 1) {
-            throw new IllegalStateException("oops something went wrong in the database");
+    @Transactional
+    @Override
+    public void addNewCourse(CourseDTO courseDTO) {
+        Course course = new Course();
+        mapDTOtoEntity(courseDTO, course);
+
+        Course result = courseRepository.save(course);
+
+        if (!course.equals(result)){
+            throw new IllegalStateException("oops something went wrong with the database");
         }
     }
 
-    public Course selectCourseById(int id){
-        return courseDAO.selectCourseById(id).orElseThrow(() -> new NotFoundException("Course not found"));
-    }
+    @Transactional
+    @Override
+    public void updateCourse(CourseDTO courseDTO) {
+        if (courseDTO == null || courseDTO.getId() == 0) {
+            throw new NotFoundException("Missing Data Exception");}
 
-    public void updateCourse(Course course){
-        selectCourseById(course.getId());
 
-        int result = courseDAO.updateCourse(course);
-        if (result != 1) {
-            throw new IllegalStateException("oops something went wrong in the database");
+        if (!courseRepository.findById(courseDTO.getId()).isEmpty()){
+            Course course = courseRepository.getById(courseDTO.getId());
+            mapDTOtoEntity(courseDTO, course);
+            courseRepository.save(course);
+        } else{
+            throw new NotFoundException("Course not found");
         }
 
     }
 
-    public void deleteCourse(int id){
-        int result = courseDAO.deleteCourse(id);
-        if (result != 1) {
-            throw new IllegalStateException("oops something went wrong in the database");
+    @Transactional
+    @Override
+    public void deleteCourseById(int id) {
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isEmpty()) {
+            throw new NotFoundException("Course does not exist");
         }
+
+        courseRepository.deleteById(id);
+
     }
 
-    public List<Course> selectAllCourses(String input){
-        return courseDAO.selectAllCoursesSortBy(input);
+    @Override
+    public List<CourseDTO> selectAllCourses(String input) {
+        List<Course> coursesInRepo = courseRepository.findAll(Sort.by(input));
+
+        List<CourseDTO> courses = new ArrayList<>();
+
+        coursesInRepo.stream().forEach(
+                c -> {
+                    CourseDTO courseDTO = mapEntityToDTO(c);
+                    courses.add(courseDTO);
+                }
+        );
+
+
+        return courses;
+    }
+
+    @Override
+    public CourseDTO selectCourseById(int id) {
+        Optional<Course> course = courseRepository.findById(id);
+
+        if (course.isEmpty()){
+            throw new NotFoundException("Course does not exist");
+        }
+
+        CourseDTO courseDTO = mapEntityToDTO(course.get());
+        return courseDTO;
+    }
+
+    private void mapDTOtoEntity(CourseDTO courseDTO, Course course){
+        course.setName(courseDTO.getName());
+        course.setDescription(courseDTO.getDescription());
+        course.setCategory(courseDTO.getCategory());
+        course.setSubcategory(courseDTO.getSubcategory());
+        course.setDeadline(courseDTO.getDeadline());
+        course.setCost(courseDTO.getCost());
+        course.setLocation(courseDTO.getLocation());
+        course.setPlace(courseDTO.getPlace());
+        course.setSpacesAvailable(courseDTO.getSpacesAvailable());
+        course.setSignUpThrough(courseDTO.getSignUpThrough());
+
+    }
+
+    private CourseDTO mapEntityToDTO(Course course){
+        CourseDTO courseDTO = new CourseDTO();
+        courseDTO.setId(course.getId());
+        courseDTO.setName(course.getName());
+        courseDTO.setRating(course.getRating());
+        courseDTO.setDescription(course.getDescription());
+        courseDTO.setCategory(course.getCategory());
+        courseDTO.setSubcategory(course.getSubcategory());
+        courseDTO.setDeadline(course.getDeadline());
+        courseDTO.setCost(course.getCost());
+        courseDTO.setLocation(course.getLocation());
+        courseDTO.setPlace(course.getPlace());
+        courseDTO.setSpacesAvailable(course.getSpacesAvailable());
+        courseDTO.setSignUpThrough(course.getSignUpThrough());
+        return courseDTO;
     }
 }

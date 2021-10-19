@@ -1,29 +1,114 @@
 package io.bootcamp.BootcampBackend.course;
 
+import io.bootcamp.BootcampBackend.wishlist.Wishlist;
+import io.bootcamp.BootcampBackend.feedback.Feedback;
+
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Table(name = "courses")
+@Entity(name = "Course")
 public class Course {
-    //                                                             Courses table
-    // id |                  name                    | rating   |   description      |  category             | subcategory |  deadline    |  cost  |  location | place | spacesAvailable |  signUpThrough
-    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // 1  | Bright Network Technology Academy (BNTA) |   4.9    |   course is cool   |  SOFTWARE_ENGINEERING | FULL_STACK  |  15/09/2021  |  0.00  |  Online   | Zoom  |       40        |  https://www.brightnetwork.co.uk/graduate-employer-company/bright-network-technology-academy/
-
+    @Id
+    @SequenceGenerator(
+            name = "course_sequence",
+            sequenceName = "course_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "course_sequence"
+    )
+    @Column(
+            name = "id",
+            updatable = false
+    )
     private int id;
+
+    @Column(
+            name = "name",
+            nullable = false
+    )
     private String name;
+
+    @Column(
+            name = "rating",
+            nullable = false
+    )
     private double rating;
+
+    @Column(
+            name = "description",
+            nullable = false
+    )
     private String description;
+
+    @Column(
+            name = "category",
+            nullable = false
+    )
     private Category category;
+
+    @Column(
+            name = "subcategory"
+    )
     private String subcategory;
+
+    @Column(
+            name = "deadline",
+            nullable = false
+    )
     private LocalDate deadline;
+
+    @Column(
+            name = "cost",
+            nullable = false
+    )
     private double cost;
+
+    @Column(
+            name = "location",
+            nullable = false
+    )
     private Location location;
+
+    @Column(
+            name = "place",
+            nullable = false
+    )
     private String place;
+
+    @Column(
+            name = "spaces_available",
+            nullable = false
+    )
     private int spacesAvailable;
+
+    @Column(
+            name = "sign_up_through",
+            nullable = false
+    )
     private String signUpThrough;
 
-    public Course(int id, String name, double rating, String description, Category category, String subcategory, LocalDate deadline, double cost, Location location, String place, int spacesAvailable, String signUpThrough) {
-        this.id = id;
+    @OneToMany(
+            mappedBy = "courseId",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private List<Feedback> feedback = new ArrayList<>();
+
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "course"
+    )
+    private List<Wishlist> wishlists = new ArrayList<>();
+
+    public Course(){};
+
+    public Course(String name, double rating, String description, Category category, String subcategory, LocalDate deadline, double cost, Location location, String place, int spacesAvailable, String signUpThrough) {
         this.name = name;
         this.rating = rating;
         this.description = description;
@@ -135,6 +220,37 @@ public class Course {
 
     public void setSignUpThrough(String signUpThrough) {
         this.signUpThrough = signUpThrough;
+    }
+
+    public void addFeedback(Feedback feedback){
+        if(!this.feedback.contains(feedback)){
+            this.feedback.add(feedback);
+            feedback.setCourseId(this);
+        }
+    }
+
+    public void removeFeedback(Feedback feedback){
+        if(this.feedback.contains(feedback)){
+            this.feedback.remove(feedback);
+            feedback.setUserId(null);
+        }
+    }
+
+    public List<Feedback> getFeedback(){
+        return feedback;
+    }
+
+    public List<Wishlist> getWishlists(){
+        return wishlists;
+    }
+    public void addToWishlist(Wishlist wishlist){
+        if(!wishlists.contains(wishlist)){
+            wishlists.add(wishlist);
+        }
+    }
+
+    public void removeFromWishlist(Wishlist wishlist){
+        wishlists.remove(wishlist);
     }
 
     @Override
